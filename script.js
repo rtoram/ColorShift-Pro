@@ -7,7 +7,7 @@ const colorInput = document.getElementById('colorInput');
 const applyColorBtn = document.getElementById('applyColorBtn');
 
 let img = new Image();
-let selectedColor = null;
+let selectedColor = null; // Armazena a cor selecionada em RGB
 
 // Upload da imagem
 imageUpload.addEventListener('change', (e) => {
@@ -34,9 +34,9 @@ canvas.addEventListener('click', (e) => {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const pixel = ctx.getImageData(x, y, 1, 1).data;
-    selectedColor = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
+    selectedColor = { r: pixel[0], g: pixel[1], b: pixel[2] }; // Armazena como objeto RGB
     const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
-    colorPreview.style.backgroundColor = selectedColor;
+    colorPreview.style.backgroundColor = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
     colorInput.value = hex;
 });
 
@@ -44,25 +44,6 @@ canvas.addEventListener('click', (e) => {
 function rgbToHex(r, g, b) {
     return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
 }
-
-// Aplicar nova cor
-applyColorBtn.addEventListener('click', () => {
-    if (!selectedColor || !colorInput.value) return;
-    const newColor = hexToRgb(colorInput.value);
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imageData.data;
-
-    for (let i = 0; i < data.length; i += 4) {
-        if (data[i] === hexToRgb(selectedColor).r &&
-            data[i + 1] === hexToRgb(selectedColor).g &&
-            data[i + 2] === hexToRgb(selectedColor).b) {
-            data[i] = newColor.r;
-            data[i + 1] = newColor.g;
-            data[i + 2] = newColor.b;
-        }
-    }
-    ctx.putImageData(imageData, 0, 0);
-});
 
 // Converter HEX para RGB
 function hexToRgb(hex) {
@@ -73,6 +54,35 @@ function hexToRgb(hex) {
         b: bigint & 255
     };
 }
+
+// Aplicar nova cor
+applyColorBtn.addEventListener('click', () => {
+    if (!selectedColor || !colorInput.value) {
+        alert('Selecione uma cor da imagem e insira uma nova cor no campo!');
+        return;
+    }
+
+    const newColor = hexToRgb(colorInput.value); // Cor nova em RGB
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+
+    // Substituir a cor selecionada pela nova cor
+    for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+
+        // Comparar com a cor selecionada
+        if (r === selectedColor.r && g === selectedColor.g && b === selectedColor.b) {
+            data[i] = newColor.r;     // Novo vermelho
+            data[i + 1] = newColor.g; // Novo verde
+            data[i + 2] = newColor.b; // Novo azul
+        }
+    }
+
+    // Atualizar o canvas com a nova imagem
+    ctx.putImageData(imageData, 0, 0);
+});
 
 // Download da imagem editada
 downloadBtn.addEventListener('click', () => {
