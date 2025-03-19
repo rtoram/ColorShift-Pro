@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ColorShift Pro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>ColorShift Pro</h1>
+    </header>
+    <main>
+        <section class="controls">
+            <input type="file" id="imageUpload" accept="image/*">
+            <button id="downloadBtn" disabled>Download</button>
+            <div id="colorPreview" class="color-box"></div>
+            <input type="text" id="colorInput" placeholder="Insira HEX (ex: #FF0000)">
+            <button id="applyColorBtn" disabled>Aplicar Cor</button>
+        </section>
+        <section class="canvas-container">
+            <canvas id="imageCanvas"></canvas>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
