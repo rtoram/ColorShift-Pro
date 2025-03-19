@@ -38,6 +38,7 @@ canvas.addEventListener('click', (e) => {
     const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
     colorPreview.style.backgroundColor = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
     colorInput.value = hex;
+    console.log('Cor selecionada:', selectedColor); // Para debug
 });
 
 // Converter RGB para HEX
@@ -66,7 +67,9 @@ applyColorBtn.addEventListener('click', () => {
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const data = imageData.data;
 
-    // Substituir a cor selecionada pela nova cor
+    console.log('Nova cor:', newColor); // Para debug
+
+    // Substituir todos os pixels da cor selecionada
     for (let i = 0; i < data.length; i += 4) {
         const r = data[i];
         const g = data[i + 1];
